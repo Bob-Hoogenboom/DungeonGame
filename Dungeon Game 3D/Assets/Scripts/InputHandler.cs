@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Bob
+namespace Dungeon
 {
     public class InputHandler : MonoBehaviour
     {
@@ -12,26 +10,26 @@ namespace Bob
         public float mouseX;
         public float mouseY;
 
-        PlayerControls inputActions;
+        private PlayerControls _inputActions;
 
-        Vector2 movementInput;
-        Vector2 cameraInput;
+        private Vector2 _movementInput;
+        private Vector2 _cameraInput;
 
         public void OnEnable()
         {
-            if(inputActions == null)
+            if(_inputActions == null)
             {
-                inputActions = new PlayerControls();
-                inputActions.PlayerMovement.Movement.performed += inputActions => movementInput = inputActions.ReadValue<Vector2>();
-                inputActions.PlayerMovement.Camera.performed += i => cameraInput = i.ReadValue<Vector2>();
+                _inputActions = new PlayerControls();
+                _inputActions.PlayerMovement.Movement.performed += inputActions => _movementInput = inputActions.ReadValue<Vector2>();
+                _inputActions.PlayerMovement.Camera.performed += i => _cameraInput = i.ReadValue<Vector2>();
             }
 
-            inputActions.Enable();
+            _inputActions.Enable();
         }
 
         private void OnDisable()
         {
-            inputActions.Disable();
+            _inputActions.Disable();
         }
 
         public void TickInput(float delta)
@@ -41,11 +39,11 @@ namespace Bob
 
         private void MoveInput(float delta)
         {
-            horizontal = movementInput.x;
-            vertical = movementInput.y;
+            horizontal = _movementInput.x;
+            vertical = _movementInput.y;
             moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
-            mouseX = cameraInput.x;
-            mouseY = cameraInput.y;
+            mouseX = _cameraInput.x;
+            mouseY = _cameraInput.y;
         }
 
 

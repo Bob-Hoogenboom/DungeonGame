@@ -1,14 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Bob
+namespace Dungeon
 {
     public class PlayerLocomotion : MonoBehaviour
     {
-        Transform cameraObject;
-        InputHandler inputHandler;
-        Vector3 moveDirection;
+        private Transform _cameraObject;
+        private InputHandler _inputHandler;
+        private Vector3 _moveDirection;
 
         [HideInInspector]
         public Transform myTransform;
@@ -19,19 +17,15 @@ namespace Bob
         public GameObject normalCamera;
 
         [Header("Stats")]
-        [SerializeField]
-        float movementSpeed = 5;
-        [SerializeField]
-        float rotationSpeed = 10;
-
-
-
+        [SerializeField] private float _movementSpeed = 5;
+        [SerializeField] private float _rotationSpeed = 10;
+        
         void Start()
         {
             rigidbody = GetComponent<Rigidbody>();
-            inputHandler = GetComponent<InputHandler>();
+            _inputHandler = GetComponent<InputHandler>();
             animatorHandler = GetComponentInChildren<AnimatorHandler>();
-            cameraObject = Camera.main.transform;
+            _cameraObject = Camera.main.transform;
             myTransform = transform;
             animatorHandler.Initialize();
         }
@@ -40,16 +34,16 @@ namespace Bob
         {
             float delta = Time.deltaTime;
 
-            inputHandler.TickInput(delta);
+            _inputHandler.TickInput(delta);
 
-            moveDirection = cameraObject.forward * inputHandler.vertical;
-            moveDirection += cameraObject.right * inputHandler.horizontal;
-            moveDirection.Normalize();
+            _moveDirection = _cameraObject.forward * _inputHandler.vertical;
+            _moveDirection += _cameraObject.right * _inputHandler.horizontal;
+            _moveDirection.Normalize();
 
-            float speed = movementSpeed;
-            moveDirection *= speed;
+            float speed = _movementSpeed;
+            _moveDirection *= speed;
 
-            Vector3 projectedVelocity = Vector3.ProjectOnPlane(moveDirection, normalVector);
+            Vector3 projectedVelocity = Vector3.ProjectOnPlane(_moveDirection, normalVector);
             rigidbody.velocity = projectedVelocity;
 
             if (animatorHandler.canRotate)
@@ -65,10 +59,10 @@ namespace Bob
         private void HandleRotation(float delta)
         {
             Vector3 targetDir = Vector3.zero;
-            float moveOverride = inputHandler.moveAmount;
+            float moveOverride = _inputHandler.moveAmount;
 
-            targetDir = cameraObject.forward * inputHandler.vertical;
-            targetDir += cameraObject.right * inputHandler.horizontal;
+            targetDir = _cameraObject.forward * _inputHandler.vertical;
+            targetDir += _cameraObject.right * _inputHandler.horizontal;
 
             targetDir.Normalize();
             targetDir.y = 0;
@@ -76,17 +70,14 @@ namespace Bob
             if (targetDir == Vector3.zero)
                 targetDir = myTransform.forward;
 
-            float rs = rotationSpeed;
+            float rs = _rotationSpeed;
 
             Quaternion tr = Quaternion.LookRotation(targetDir);
             Quaternion targetRotation = Quaternion.Slerp(myTransform.rotation, tr, rs * delta);
 
             myTransform.rotation = targetRotation;
-
         }
 
         #endregion
-
-
     }
 }

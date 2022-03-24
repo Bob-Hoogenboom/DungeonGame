@@ -1,21 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Bob
+namespace Dungeon
 {
     public class AnimatorHandler : MonoBehaviour
     {
         public Animator anime;
-        int vertical;
-        int horizontal;
+        private int _vertical;
+        private int _horizontal;
         public bool canRotate;
 
         public void Initialize()
         {
             anime = GetComponent<Animator>();
-            vertical = Animator.StringToHash("Vertical");
-            horizontal = Animator.StringToHash("Horizontal");
+            _vertical = Animator.StringToHash("Vertical");
+            _horizontal = Animator.StringToHash("Horizontal");
         }                  
 
         public void UpdateAnimatorValues(float verticalMovement, float horizontalMovement)
@@ -71,8 +69,8 @@ namespace Bob
             }
             #endregion
 
-            anime.SetFloat(vertical, v, 0.1f, Time.deltaTime);
-            anime.SetFloat(horizontal, h, 0.1f, Time.deltaTime);
+            anime.SetFloat(_vertical, v, 0.1f, Time.deltaTime);
+            anime.SetFloat(_horizontal, h, 0.1f, Time.deltaTime);
         }
 
         public void CanRotate()
